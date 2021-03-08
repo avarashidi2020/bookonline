@@ -15,7 +15,18 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import java.util.List;
+
+import ir.app.rashidi.MyApplication;
 import ir.app.rashidi.R;
+import ir.app.rashidi.data.local.DbHelper;
+import ir.app.rashidi.data.remote.RetrofitInstance;
+import ir.app.rashidi.data.remote.Webservice;
+import ir.app.rashidi.entity.Book;
+import ir.app.rashidi.service.LoadDataFromWebserviceService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
@@ -50,6 +61,41 @@ public class SplashActivity extends AppCompatActivity {
         unRegisterNetwork();
     }
 
+    private void getAllBook(){
+        DbHelper dbHelper = new DbHelper(MyApplication.getContext());
+        Webservice webservice = RetrofitInstance.getInstance().getWebservice();
+        Call<List<Book>> call = webservice.getAllBook();
+        call.enqueue(new Callback<List<Book>>() {
+            @Override
+            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
+                if (response.isSuccessful()){
+                    if (dbHelper.getAllBook().size() >= response.body().size()){
+                        Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(SplashActivity.this, LoadDataFromWebserviceService.class);
+                                startService(intent);
+
+                                Intent intent1 = new Intent(SplashActivity.this,MainActivity.class);
+                                startActivity(intent1);
+                                finish();
+                            }
+                        }, 5000);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Book>> call, Throwable t) {
+                Log.i("Error =>",t.getMessage());
+            }
+        });
+    }
+
     private final BroadcastReceiver networkChange = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -65,14 +111,7 @@ public class SplashActivity extends AppCompatActivity {
 
             if (isOnline(context)){
                 Log.e("main", "connect");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }, 5000);
+                getAllBook();
             }else{
                 Log.e("main", "not connect");
                 dialog.show();
