@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,11 +34,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
+    SharedPreferences sharedPreferences;
+    boolean isLogin = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spalsh);
 
+        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        isLogin = sharedPreferences.getBoolean("rememberMe",false);
         registerNetworkBroadcast();
     }
 
@@ -69,10 +76,15 @@ public class SplashActivity extends AppCompatActivity {
         Call<List<Book>> call = webservice.getAllBook();
         call.enqueue(new Callback<List<Book>>() {
             @Override
-            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
+            public void onResponse(@NotNull Call<List<Book>> call, @NotNull Response<List<Book>> response) {
                 if (response.isSuccessful()){
                     if (dbHelper.getAllBook().size() >= response.body().size()){
-                        Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+                        Intent intent;
+                        if (isLogin){
+                            intent = new Intent(SplashActivity.this, MainActivity.class);
+                        }else{
+                            intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        }
                         startActivity(intent);
                         finish();
                     }else{
@@ -82,7 +94,12 @@ public class SplashActivity extends AppCompatActivity {
                                 Intent intent = new Intent(SplashActivity.this, LoadDataFromWebserviceService.class);
                                 startService(intent);
 
-                                Intent intent1 = new Intent(SplashActivity.this, MainActivity.class);
+                                Intent intent1;
+                                if (isLogin){
+                                    intent1 = new Intent(SplashActivity.this, MainActivity.class);
+                                }else{
+                                    intent1 = new Intent(SplashActivity.this, LoginActivity.class);
+                                }
                                 startActivity(intent1);
                                 finish();
                             }

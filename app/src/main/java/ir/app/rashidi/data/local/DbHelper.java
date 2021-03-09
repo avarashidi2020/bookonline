@@ -18,7 +18,7 @@ import ir.app.rashidi.entity.User;
 public class DbHelper extends SQLiteOpenHelper {
     private String TAG = "Database";
     public static final String DATABASE_NAME = "book" ;
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     private SQLiteDatabase db;
 
@@ -48,7 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createUserTable(SQLiteDatabase sqLiteDatabase){
         String query="create table tbl_user (" +
-                "id integer(10) primary key," +
+                "id  integer(10) PRIMARY KEY AUTOINCREMENT," +
                 "name varchar(50), " +
                 "family varchar(50), " +
                 "email varchar(50), " +
@@ -58,7 +58,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createStarBookTable(SQLiteDatabase sqLiteDatabase){
         String query = "create table tbl_star_book (" +
-                "id integer(10) primary key," +
+                "id integer(10) PRIMARY KEY AUTOINCREMENT," +
                 "user integer(10)," +
                 "book integer(10)" +
                 ")";
@@ -72,14 +72,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
     //insert Queries
 
-    public boolean insertUser(User user){
+    public boolean insertUser(String name,String family,String email,String password){
         db = getWritableDatabase();
-        if (!checkExitUser(user.getEmail())){
+        if (!checkExitUser(email)){
             ContentValues contentValues = new ContentValues();
-            contentValues.put("name",user.getName());
-            contentValues.put("family",user.getFamily());
-            contentValues.put("email",user.getEmail());
-            contentValues.put("password",user.getPassword());
+            contentValues.put("name",name);
+            contentValues.put("family",family);
+            contentValues.put("email",email);
+            contentValues.put("password",password);
             db.insert("tbl_user",null,contentValues);
 
             return true;
