@@ -48,7 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createUserTable(SQLiteDatabase sqLiteDatabase){
         String query="create table tbl_user (" +
-                "id integer(10) primary key AUTOINCREMENT," +
+                "id integer(10) primary key," +
                 "name varchar(50), " +
                 "family varchar(50), " +
                 "email varchar(50), " +
@@ -58,7 +58,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createStarBookTable(SQLiteDatabase sqLiteDatabase){
         String query = "create table tbl_star_book (" +
-                "id integer(10) primary key AUTOINCREMENT," +
+                "id integer(10) primary key," +
                 "user integer(10)," +
                 "book integer(10)" +
                 ")";
@@ -93,6 +93,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String query = "select * from tbl_user where email = '"+email+"' and password = '"+password+"'";
         Cursor cursor = db.rawQuery(query,null);
         if (cursor.getCount() > 0){
+            cursor.moveToFirst();
             user = new User();
             user.setId(cursor.getInt(cursor.getColumnIndex("id")));
             user.setName(cursor.getString(cursor.getColumnIndex("name")));
@@ -126,6 +127,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String query = "select * from tbl_book";
         Cursor cursor = db.rawQuery(query,null);
         if (cursor.getCount() > 0){
+            cursor.moveToFirst();
             do {
                 Book book = new Book();
                 book.setId(cursor.getInt(cursor.getColumnIndex("id")));
@@ -137,6 +139,7 @@ public class DbHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
 
+        cursor.close();
         return books;
     }
 
@@ -146,6 +149,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String query = "select * from tbl_book where id = '"+id+"'";
         Cursor cursor = db.rawQuery(query,null);
         if (cursor.getCount() > 0){
+            cursor.moveToFirst();
             book = new Book();
             book.setId(cursor.getInt(cursor.getColumnIndex("id")));
             book.setName(cursor.getString(cursor.getColumnIndex("name")));

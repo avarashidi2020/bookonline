@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import ir.app.rashidi.MyApplication;
@@ -80,7 +82,7 @@ public class SplashActivity extends AppCompatActivity {
                                 Intent intent = new Intent(SplashActivity.this, LoadDataFromWebserviceService.class);
                                 startService(intent);
 
-                                Intent intent1 = new Intent(SplashActivity.this,MainActivity.class);
+                                Intent intent1 = new Intent(SplashActivity.this, MainActivity.class);
                                 startActivity(intent1);
                                 finish();
                             }
@@ -91,7 +93,7 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Book>> call, Throwable t) {
-                Log.i("Error =>",t.getMessage());
+                Log.e("Error =>",t.getMessage());
             }
         });
     }
