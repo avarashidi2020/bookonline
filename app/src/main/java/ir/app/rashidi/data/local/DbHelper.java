@@ -18,7 +18,7 @@ import ir.app.rashidi.entity.User;
 public class DbHelper extends SQLiteOpenHelper {
     private String TAG = "Database";
     public static final String DATABASE_NAME = "book" ;
-    public static final int VERSION = 2;
+    public static final int VERSION = 1;
 
     private SQLiteDatabase db;
 
@@ -48,7 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createUserTable(SQLiteDatabase sqLiteDatabase){
         String query="create table tbl_user (" +
-                "id  integer(10) PRIMARY KEY AUTOINCREMENT," +
+                "id  integer(10) PRIMARY KEY," +
                 "name varchar(50), " +
                 "family varchar(50), " +
                 "email varchar(50), " +
@@ -58,7 +58,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createStarBookTable(SQLiteDatabase sqLiteDatabase){
         String query = "create table tbl_star_book (" +
-                "id integer(10) PRIMARY KEY AUTOINCREMENT," +
+                "id integer(10) PRIMARY KEY," +
                 "user integer(10)," +
                 "book integer(10)" +
                 ")";
