@@ -13,11 +13,30 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"/>
 
-    <ListView
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp">
+        <RadioButton
+            android:layout_margin="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Gride"
+            android:id="@+id/radioBtnGride"/>
+
+        <RadioButton
+            android:layout_margin="8dp"
+            android:id="@+id/radioBtnList"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="List"/>
+    </RadioGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:id="@+id/bookList"
-        android:dividerHeight="0dp"/>
+        android:id="@+id/bookList"/>
 
 </LinearLayout>

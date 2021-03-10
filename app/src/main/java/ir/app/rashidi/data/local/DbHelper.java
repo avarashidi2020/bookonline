@@ -160,6 +160,28 @@ public class DbHelper extends SQLiteOpenHelper {
         return book;
     }
 
+    public List<Book> searchBook(String text){
+        List<Book> books = new ArrayList<>();
+        db = getReadableDatabase();
+        String query = "select * from tbl_book where name like '%"+text+"%'";
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.getCount() > 0){
+            cursor.moveToFirst();
+            do {
+                Book book = new Book();
+                book.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                book.setName(cursor.getString(cursor.getColumnIndex("name")));
+                book.setImage(cursor.getString(cursor.getColumnIndex("image")));
+                book.setFileUrl(cursor.getString(cursor.getColumnIndex("fileUrl")));
+
+                books.add(book);
+            }while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return books;
+    }
+
 
     //exit methods
     private boolean checkExitUser(String email){
