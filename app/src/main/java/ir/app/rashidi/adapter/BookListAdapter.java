@@ -1,6 +1,7 @@
 package ir.app.rashidi.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ir.app.rashidi.R;
+import ir.app.rashidi.activity.ShowBookActivity;
 import ir.app.rashidi.entity.Book;
 
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolder> {
@@ -40,6 +42,16 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookVi
         Book book = books.get(position);
         holder.title.setText(book.getName());
         Picasso.get().load(book.getImage()).into(holder.img);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShowBookActivity.class);
+                intent.putExtra("book",book);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
 

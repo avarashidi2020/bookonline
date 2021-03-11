@@ -16,7 +16,7 @@ import ir.app.rashidi.entity.Book;
 import ir.app.rashidi.entity.User;
 
 public class DbHelper extends SQLiteOpenHelper {
-    private String TAG = "Database";
+    private final String TAG = "Database";
     public static final String DATABASE_NAME = "book" ;
     public static final int VERSION = 1;
 
@@ -41,7 +41,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 "id integer(10) primary key," +
                 "name varchar(255)," +
                 "image text(255)," +
-                "fileUrl text(255)" +
+                "fileUrl text(255)," +
+                "nusherTell text(255)" +
                 ")";
         sqLiteDatabase.execSQL(query);
     }
@@ -59,8 +60,8 @@ public class DbHelper extends SQLiteOpenHelper {
     private void createStarBookTable(SQLiteDatabase sqLiteDatabase){
         String query = "create table tbl_star_book (" +
                 "id integer(10) PRIMARY KEY," +
-                "user integer(10)," +
-                "book integer(10)" +
+                "book integer(10)," +
+                "score text(10)" +
                 ")";
         sqLiteDatabase.execSQL(query);
     }
@@ -114,6 +115,7 @@ public class DbHelper extends SQLiteOpenHelper {
             contentValues.put("name",book.getName());
             contentValues.put("image",book.getImage());
             contentValues.put("fileUrl",book.getFileUrl());
+            contentValues.put("nusherTell",book.getNasherTell());
 
             db.insert("tbl_book",null,contentValues);
         }
@@ -134,6 +136,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 book.setName(cursor.getString(cursor.getColumnIndex("name")));
                 book.setImage(cursor.getString(cursor.getColumnIndex("image")));
                 book.setFileUrl(cursor.getString(cursor.getColumnIndex("fileUrl")));
+                book.setNasherTell(cursor.getString(cursor.getColumnIndex("nusherTell")));
+                book.setScore(getScoreBook(cursor.getInt(cursor.getColumnIndex("id"))));
 
                 books.add(book);
             }while (cursor.moveToNext());
@@ -141,23 +145,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return books;
-    }
-
-    public Book getBook(int id){
-        db = getReadableDatabase();
-        Book book = null;
-        String query = "select * from tbl_book where id = '"+id+"'";
-        Cursor cursor = db.rawQuery(query,null);
-        if (cursor.getCount() > 0){
-            cursor.moveToFirst();
-            book = new Book();
-            book.setId(cursor.getInt(cursor.getColumnIndex("id")));
-            book.setName(cursor.getString(cursor.getColumnIndex("name")));
-            book.setImage(cursor.getString(cursor.getColumnIndex("image")));
-            book.setFileUrl(cursor.getString(cursor.getColumnIndex("fileUrl")));
-        }
-
-        return book;
     }
 
     public List<Book> searchBook(String text){
@@ -173,6 +160,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 book.setName(cursor.getString(cursor.getColumnIndex("name")));
                 book.setImage(cursor.getString(cursor.getColumnIndex("image")));
                 book.setFileUrl(cursor.getString(cursor.getColumnIndex("fileUrl")));
+                book.setNasherTell(cursor.getString(cursor.getColumnIndex("nusherTell")));
+                book.setScore(getScoreBook(cursor.getInt(cursor.getColumnIndex("id"))));
 
                 books.add(book);
             }while (cursor.moveToNext());
@@ -180,6 +169,28 @@ public class DbHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return books;
+    }
+
+    public void setScoreBook(int book,String score){
+        db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("book",book);
+        contentValues.put("score",score);
+
+        db.insert("tbl_star_book",null,contentValues);
+    }
+
+    private float getScoreBook(int book){
+        float score =  0.0f;
+
+        String query = "select sum(score) as score from tbl_star_book where book = '"+book+"'";
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.getCount() > 0){
+            cursor.moveToFirst();
+            score = cursor.getFloat(cursor.getColumnIndex("score"));
+        }
+        cursor.close();
+        return score;
     }
 
 

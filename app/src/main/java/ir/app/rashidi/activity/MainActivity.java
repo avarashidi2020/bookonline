@@ -4,18 +4,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +33,9 @@ import ir.app.rashidi.data.local.DbHelper;
 import ir.app.rashidi.entity.Book;
 
 public class MainActivity extends AppCompatActivity {
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+
     SharedPreferences preferences;
     RecyclerView recyclerView;
     BookListAdapter adapter ;
@@ -38,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        drawerLayout = findViewById(R.id.drawer);
+        navigationView = findViewById(R.id.nav_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.bookList);
         radioGroup = findViewById(R.id.radioGroup);
@@ -45,21 +57,21 @@ public class MainActivity extends AppCompatActivity {
         preferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         dbHelper = new DbHelper(this);
         books = dbHelper.getAllBook();
-        adapter = new BookListAdapter(this,books);
-         layoutManager = new GridLayoutManager(this,1);
+        adapter = new BookListAdapter(this, books);
+        layoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
         radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
-            if (i == R.id.radioBtnGride){
+            if (i == R.id.radioBtnGride) {
                 layoutManager.setSpanCount(2);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(adapter);
-            }else if (i == R.id.radioBtnList){
+            } else if (i == R.id.radioBtnList) {
                 layoutManager.setSpanCount(1);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -67,6 +79,55 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
             }
         });
+
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            Intent intent = null;
+            switch (menuItem.getItemId()) {
+                case R.id.home:
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.myBook:
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.setting:
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.call:
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.about:
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.logout:
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("rememberMe",false);
+                    editor.apply();
+                    Toast.makeText(this, "با موفقیت خارج شدید", Toast.LENGTH_SHORT).show();
+
+                    startActivity(new Intent(this,LoginActivity.class));
+                    finish();
+                    break;
+                default:
+            }
+            return true;
+        });
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
     }
 
     private void searchBooks(String text){
@@ -79,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.search_menu, menu);
 
         MenuItem menuItem = menu.findItem(R.id.search);
         searchView = (SearchView) menuItem.getActionView();
@@ -97,20 +158,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.logout){
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean("rememberMe",false);
-            editor.apply();
-            Toast.makeText(this, "با موفقیت خارج شدید", Toast.LENGTH_SHORT).show();
-
-            startActivity(new Intent(this,LoginActivity.class));
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
