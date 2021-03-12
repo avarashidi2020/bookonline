@@ -110,7 +110,9 @@ public class BookDownload extends AsyncTask<String, Integer, Boolean> {
         if (result) {
             this.progressDialog.dismiss();
             File f = new File(folder, fileName);
-            int file_size = Integer.parseInt(String.valueOf(f.length()/1000));
+            long fileSizeInBytes = f.length();
+            long fileSizeInKB = fileSizeInBytes / 1024;
+            long fileSizeInMB = fileSizeInKB / 1024;
             int requestID = (int) System.currentTimeMillis();
 
             NotificationManager mNotificationManager;
@@ -119,7 +121,7 @@ public class BookDownload extends AsyncTask<String, Integer, Boolean> {
             Intent ii = new Intent(context, ShowMayBookActivity.class);
             ii.putExtra("storage",folder);
             ii.putExtra("name",fileName);
-            ii.putExtra("size",file_size);
+            ii.putExtra("size",fileSizeInMB);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, requestID, ii, 0);
 
             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();

@@ -95,9 +95,13 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.call:
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    intent = new Intent(MainActivity.this,ContactActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.about:
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    intent = new Intent(MainActivity.this,AboutActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.logout:
                     drawerLayout.closeDrawer(GravityCompat.START);

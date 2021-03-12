@@ -31,7 +31,7 @@ public class ShowBookActivity extends AppCompatActivity {
     private DbHelper dbHelper;
 
     private ImageView imageView;
-    private TextView textView;
+    private TextView textView,txtDesc;
     private RatingBar ratingBar;
     private Button sendSms;
     private Button call;
@@ -44,6 +44,7 @@ public class ShowBookActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         imageView = findViewById(R.id.bookShowImage);
         textView = findViewById(R.id.bookShowTitle);
+        txtDesc = findViewById(R.id.txtDescription);
         ratingBar = findViewById(R.id.Rating_Bar);
         sendSms = findViewById(R.id.sendSms);
         call = findViewById(R.id.Call);
@@ -62,6 +63,8 @@ public class ShowBookActivity extends AppCompatActivity {
             Picasso.get().load(book.getImage()).into(imageView);
 
             ratingBar.setRating(book.getScore());
+
+            txtDesc.setText(book.getDescription());
         }
 
 

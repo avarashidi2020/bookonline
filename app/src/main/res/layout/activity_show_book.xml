@@ -73,6 +73,14 @@
                     android:textColor="#fff"
                     android:textSize="16sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:textColor="#000"/>
         </LinearLayout>
     </ScrollView>
 

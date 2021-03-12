@@ -9,6 +9,7 @@ public class Book implements Serializable {
     private String fileUrl;
     private String nasherTell;
     private float score;
+    private String description;
 
 
     public int getId() {
@@ -57,5 +58,13 @@ public class Book implements Serializable {
 
     public void setScore(float score) {
         this.score = score;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

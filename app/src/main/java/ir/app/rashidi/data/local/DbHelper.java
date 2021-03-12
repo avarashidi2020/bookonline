@@ -42,7 +42,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 "name varchar(255)," +
                 "image text(255)," +
                 "fileUrl text(255)," +
-                "nusherTell text(255)" +
+                "nusherTell text(255)," +
+                "description text(255)" +
                 ")";
         sqLiteDatabase.execSQL(query);
     }
@@ -116,6 +117,7 @@ public class DbHelper extends SQLiteOpenHelper {
             contentValues.put("image",book.getImage());
             contentValues.put("fileUrl",book.getFileUrl());
             contentValues.put("nusherTell",book.getNasherTell());
+            contentValues.put("description",book.getDescription());
 
             db.insert("tbl_book",null,contentValues);
         }
@@ -162,6 +164,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 book.setFileUrl(cursor.getString(cursor.getColumnIndex("fileUrl")));
                 book.setNasherTell(cursor.getString(cursor.getColumnIndex("nusherTell")));
                 book.setScore(getScoreBook(cursor.getInt(cursor.getColumnIndex("id"))));
+                book.setDescription(cursor.getString(cursor.getColumnIndex("description")));
 
                 books.add(book);
             }while (cursor.moveToNext());
