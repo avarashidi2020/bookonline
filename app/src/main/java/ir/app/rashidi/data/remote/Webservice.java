@@ -8,6 +8,6 @@ import retrofit2.http.GET;
 
 public interface Webservice {
 
-    @GET("77a0fb50-850d-4dff-8e5d-7ad4ad7f3b97")
+    @GET("eb0fcefa-bf55-4b75-a0ed-e835cf73a147")
     Call<List<Book>> getAllBook();
 }

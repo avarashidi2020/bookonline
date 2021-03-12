@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "با موفقیت خارج شدید", Toast.LENGTH_SHORT).show();
 
                     startActivity(new Intent(this,LoginActivity.class));
-                    finish();
+                    finishAffinity();
                     break;
                 default:
             }
