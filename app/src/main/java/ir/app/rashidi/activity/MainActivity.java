@@ -85,12 +85,13 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getItemId()) {
                 case R.id.home:
                     drawerLayout.closeDrawer(GravityCompat.START);
-                    break;
-                case R.id.myBook:
-                    drawerLayout.closeDrawer(GravityCompat.START);
+                    intent = new Intent(MainActivity.this,ShowListBookFroDownloadActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.setting:
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    intent = new Intent(MainActivity.this,SettingActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.call:
                     drawerLayout.closeDrawer(GravityCompat.START);
